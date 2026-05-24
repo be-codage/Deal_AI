@@ -1,6 +1,10 @@
+import os
+
 import streamlit as st
 import requests
 import time
+
+API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
 
 # ---------------------------------------------------
 # PAGE CONFIG
@@ -241,7 +245,7 @@ if st.button("Analyze Deals"):
         try:
 
             response = requests.get(
-                "http://127.0.0.1:8000/analyze",
+                f"{API_BASE_URL}/analyze",
                 params={"url": url}
             )
 

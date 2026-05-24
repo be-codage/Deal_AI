@@ -160,6 +160,64 @@ curl "http://127.0.0.1:8000/analyze?url=https://www.example.com/deal"
 }
 ```
 
+## Deployment
+
+This app has **two parts** that must be deployed separately:
+
+| Service | What it runs | Suggested platform |
+|---------|--------------|-------------------|
+| **API** | `uvicorn app.api:app` | [Render](https://render.com) (free tier) |
+| **UI** | `streamlit run app/streamlit_app.py` | [Streamlit Community Cloud](https://streamlit.io/cloud) (free) |
+
+### Step 1 — Deploy the FastAPI backend (Render)
+
+1. Push your code to GitHub ([be-codage/Deal_AI](https://github.com/be-codage/Deal_AI))
+2. Go to [render.com](https://render.com) → **New** → **Web Service**
+3. Connect your GitHub repo
+4. **Settings:**
+   - **Name:** `dealmind-api`
+   - **Runtime:** Python
+   - **Build command:** `pip install -r requirements.txt`
+   - **Start command:** `uvicorn app.api:app --host 0.0.0.0 --port $PORT`
+5. Add **Environment Variable:**
+   - `GROQ_API_KEY` = your Groq key
+6. Click **Create Web Service**
+7. Copy your live URL, e.g. `https://dealmind-api.onrender.com`
+
+Test it: `https://dealmind-api.onrender.com/docs`
+
+### Step 2 — Deploy the Streamlit UI (Streamlit Cloud)
+
+1. Go to [share.streamlit.io](https://share.streamlit.io)
+2. Sign in with GitHub → **New app**
+3. Select repo `be-codage/Deal_AI`
+4. **Main file path:** `app/streamlit_app.py`
+5. Open **Advanced settings** → **Secrets** and add:
+
+```toml
+GROQ_API_KEY = "your_groq_api_key_here"
+API_BASE_URL = "https://dealmind-api.onrender.com"
+```
+
+Replace `API_BASE_URL` with your Render URL from Step 1 (no trailing slash).
+
+6. Click **Deploy**
+
+Your app will be live at a URL like `https://deal-ai.streamlit.app`.
+
+### Environment variables
+
+| Variable | Where | Purpose |
+|----------|-------|---------|
+| `GROQ_API_KEY` | API (Render) | Groq LLM access |
+| `API_BASE_URL` | UI (Streamlit secrets) | Points UI to deployed API |
+
+### Notes
+
+- Render free tier sleeps after inactivity — first request may take ~30 seconds to wake up
+- Never commit `.env` or API keys to GitHub
+- Both services need the same GitHub repo; only secrets differ per platform
+
 ## License
 
 MIT

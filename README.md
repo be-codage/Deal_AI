@@ -3,6 +3,7 @@
 AI-powered ecommerce deal analyzer. Paste a product or coupon page URL and get trust scores, discount analysis, and suspicious pricing detection.
 
 **Live repo:** [github.com/be-codage/Deal_AI](https://github.com/be-codage/Deal_AI)
+Demo website:https://dealai-byjb9cvhtxb3zrof8tsvbe.streamlit.app/
 
 ## Features
 
